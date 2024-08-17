@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { MdOutlineEmail, MdLockOutline } from "react-icons/md";
 import { MdPassword } from "react-icons/md";
 import { FiArrowLeft } from "react-icons/fi";
+import { Link } from "react-router-dom";
 
 export const Login = () => {
   const [formData, setFormData] = useState({
@@ -390,12 +391,17 @@ export const Login = () => {
                       <div className="text-center mt-4">
                         <p className="text-gray-600">
                           Do you have an account?{" "}
-                          <a
-                            href="/register"
+
+                          <Link to={"/register"}>
+
+                          <p
+                            
                             className="text-blue-500 hover:underline"
                           >
                             Register as an expert
-                          </a>
+                          </p>
+
+</Link>
                         </p>
                       </div>
                     </div>

@@ -5,7 +5,7 @@ import countriesData from "../assets/countries.json";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
-
+import { Link } from "react-router-dom";
 export const Register = () => {
   const [countries, setCountries] = useState([]);
   const [formData, setFormData] = useState({
@@ -167,11 +167,9 @@ export const Register = () => {
     }
   };
 
-  const handleNavigate = (route)=>{
-
-navigate(route)
+  
     
-  }
+
 
   return (
     <div className="flex flex-col md:flex-row h-screen">
@@ -318,9 +316,11 @@ navigate(route)
               <div className="text-center mt-4">
                 <p className="text-gray-600">
                   Already have an account?{" "}
-                  <p onClick {()=>{handleNavigate("/login")}} className="text-blue-500 hover:underline">
+                  <Link to={"/login"}>  
+                  <p className="text-blue-500 hover:underline">
                     Sign In
                   </p>
+                  </Link>
                 </p>
               </div>
             </form>
