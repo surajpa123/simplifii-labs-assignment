@@ -318,7 +318,7 @@ navigate(route)
               <div className="text-center mt-4">
                 <p className="text-gray-600">
                   Already have an account?{" "}
-                  <p onClick {()=>handleNavigate("/login")} className="text-blue-500 hover:underline">
+                  <p onClick {()=>{handleNavigate("/login")}} className="text-blue-500 hover:underline">
                     Sign In
                   </p>
                 </p>
