@@ -167,6 +167,12 @@ export const Register = () => {
     }
   };
 
+  const handleNavigate = (route)=>{
+
+navigate(route)
+    
+  }
+
   return (
     <div className="flex flex-col md:flex-row h-screen">
       <div
@@ -312,9 +318,9 @@ export const Register = () => {
               <div className="text-center mt-4">
                 <p className="text-gray-600">
                   Already have an account?{" "}
-                  <a href="/login" className="text-blue-500 hover:underline">
+                  <p onClick {()=>handleNavigate("/login")} className="text-blue-500 hover:underline">
                     Sign In
-                  </a>
+                  </p>
                 </p>
               </div>
             </form>
