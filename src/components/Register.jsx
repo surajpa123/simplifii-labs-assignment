@@ -42,7 +42,7 @@ export const Register = () => {
     const modified = countriesData.countries.map((ele) => {
       return {
         value: ele?.code,
-        label: `${ele?.name} ${ele?.code}`,
+        label: `${ele?.name} ${ele.code}`,
       };
     });
     setCountries(modified);
@@ -88,8 +88,6 @@ export const Register = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    console.log(formData, "formData");
 
     const validationErrors = validateForm();
     if (Object.keys(validationErrors).length > 0) {
@@ -167,6 +165,8 @@ export const Register = () => {
     }
   };
 
+
+  console.log(formData,'formData')
   
     
 
@@ -242,7 +242,7 @@ export const Register = () => {
                 </div>
                 <div className="flex-1">
                   <InputField
-                    type="text"
+                    type="number"
                     label="Mobile Number*"
                     name="mobileNumber"
                     value={formData.mobileNumber}
@@ -254,7 +254,7 @@ export const Register = () => {
                 </div>
               </div>
               <InputField
-                type="email"
+                type="text"
                 label="Email ID*"
                 name="email"
                 value={formData.email}

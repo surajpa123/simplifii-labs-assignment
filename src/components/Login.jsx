@@ -168,7 +168,7 @@ export const Login = () => {
                     <input
                       id="email"
                       name="email"
-                      type="email"
+                      type="text"
                       value={formData.email}
                       onChange={handleChange}
                       className="px-8 py-2 border border-gray-300 focus:outline-none w-full rounded-3xl p-4"
@@ -205,7 +205,7 @@ export const Login = () => {
                     <input
                       id="email"
                       name="email"
-                      type="email"
+                      type="text"
                       value={formData.email}
                       onChange={handleChange}
                       className="px-8 py-2 border border-gray-300 focus:outline-none w-full rounded-3xl p-4"
@@ -391,17 +391,11 @@ export const Login = () => {
                       <div className="text-center mt-4">
                         <p className="text-gray-600">
                           Do you have an account?{" "}
-
                           <Link to={"/register"}>
-
-                          <p
-                            
-                            className="text-blue-500 hover:underline"
-                          >
-                            Register as an expert
-                          </p>
-
-</Link>
+                            <p className="text-blue-500 hover:underline">
+                              Register as an expert
+                            </p>
+                          </Link>
                         </p>
                       </div>
                     </div>

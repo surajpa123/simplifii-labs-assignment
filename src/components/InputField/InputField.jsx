@@ -11,7 +11,7 @@ export const InputField = ({
   ...props
 }) => {
   const [hasValue, setHasValue] = useState(false);
-  const [isFocused, setIsFocused] = useState(false); // Track focus state
+  const [isFocused, setIsFocused] = useState(false);
 
   useEffect(() => {
     if (value) {
@@ -21,7 +21,7 @@ export const InputField = ({
 
   const handleSelectChange = (e) => {
     setHasValue(e.target.value !== "");
-    props.onChange && props.onChange(e); // Keep existing onChange behavior
+    props.onChange && props.onChange(e);
   };
 
   const handleFocus = () => {
@@ -31,13 +31,18 @@ export const InputField = ({
 
   const handleBlur = (e) => {
     setIsFocused(false);
-
     setHasValue(e.target.value !== "");
   };
 
+  // Find the selected option to display correctly
+  const selectedOption = options.find(option => option.value === value);
+
+
+  console.log(selectedOption)
+
   return (
     <div className="w-full">
-      <div className="relative w-full min-w-[120px] h-10">
+      <div className="relative w-full sm:min-w-[120px] h-10">
         {type === "select" ? (
           <select
             id={name}
@@ -56,7 +61,7 @@ export const InputField = ({
             </option>
             {options.map((option, index) => (
               <option key={index} value={option.value}>
-                {option.label}
+                {`${option.label}`}
               </option>
             ))}
           </select>
@@ -68,7 +73,7 @@ export const InputField = ({
             } focus:border-2 text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200 focus:border-[rgb(236,147,36)]`}
             type={type}
             name={name}
-            // placeholder={label}
+            placeholder={label}
             onFocus={handleFocus}
             onBlur={handleBlur}
             value={value}
