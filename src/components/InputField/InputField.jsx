@@ -12,6 +12,7 @@ export const InputField = ({
 }) => {
   const [hasValue, setHasValue] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
+  const [toggleOption, setToggleOption] = useState(false);
 
   useEffect(() => {
     if (value) {
@@ -35,14 +36,16 @@ export const InputField = ({
   };
 
   // Find the selected option to display correctly
-  const selectedOption = options.find(option => option.value === value);
+  const shouldShowValue = !isFocused && value;
 
-
-  console.log(selectedOption)
+  useEffect(() => {
+    setToggleOption(!toggleOption);
+    console.log(isFocused);
+  }, [props.onChange]);
 
   return (
     <div className="w-full">
-      <div className="relative w-full sm:min-w-[120px] h-10">
+      <div className="relative w-full sm:min-w-[110px] h-10">
         {type === "select" ? (
           <select
             id={name}
@@ -61,7 +64,7 @@ export const InputField = ({
             </option>
             {options.map((option, index) => (
               <option key={index} value={option.value}>
-                {`${option.label}`}
+                {value === option.value ? option.value : option.label}
               </option>
             ))}
           </select>
