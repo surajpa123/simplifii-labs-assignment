@@ -127,7 +127,17 @@ export const Register = () => {
   };
 
   const handleOtpVerification = () => {
-    const correctOtp = "123456";
+    let correctOtp = formData.mobileNumber;
+
+    correctOtp = correctOtp.slice(-6);
+
+    let validationErrors = {};
+
+    if (!formData.otp || formData.otp.length < 6) {
+      validationErrors.otp = "Please enter 6 digit otp";
+      setErrors(validationErrors);
+      return;
+    }
 
     if (formData.otp === correctOtp) {
       const userData = {
@@ -165,11 +175,7 @@ export const Register = () => {
     }
   };
 
-
-  console.log(formData,'formData')
-  
-    
-
+  console.log(formData, "formData");
 
   return (
     <div className="flex flex-col md:flex-row h-screen">
@@ -267,7 +273,7 @@ export const Register = () => {
               {otpSent && (
                 <>
                   <InputField
-                    type="text"
+                    type="number"
                     label="Enter OTP*"
                     name="otp"
                     value={formData.otp}
@@ -316,10 +322,8 @@ export const Register = () => {
               <div className="text-center mt-4">
                 <p className="text-gray-600">
                   Already have an account?{" "}
-                  <Link to={"/login"}>  
-                  <p className="text-blue-500 hover:underline">
-                    Sign In
-                  </p>
+                  <Link to={"/login"}>
+                    <p className="text-blue-500 hover:underline">Sign In</p>
                   </Link>
                 </p>
               </div>

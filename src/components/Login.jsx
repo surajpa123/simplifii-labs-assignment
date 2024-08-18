@@ -44,6 +44,7 @@ export const Login = () => {
 
   const validateForm = () => {
     let validationErrors = {};
+
     if (!formData.email) {
       validationErrors.email = "This field is required";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
@@ -58,6 +59,7 @@ export const Login = () => {
   const handleLogin = (e) => {
     e.preventDefault();
     const validationErrors = validateForm();
+
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
@@ -93,7 +95,18 @@ export const Login = () => {
   };
 
   const handleOtpVerification = () => {
-    const correctOtp = "123456";
+    let correctOtp = JSON.parse(localStorage.getItem("userInfo")).mobileNumber;
+
+    correctOtp = correctOtp.slice(-6);
+
+    let validationErrors = {};
+
+    if (!formData.otp || formData.otp.length < 6) {
+      validationErrors.otp = "Please enter 6 digit otp";
+      setErrors(validationErrors);
+      return;
+    }
+
     if (formData.otp === correctOtp) {
       toast.success("OTP verified! Redirecting...", {
         position: "bottom-left",
@@ -328,7 +341,7 @@ export const Login = () => {
                       <input
                         id="otp"
                         name="otp"
-                        type="text"
+                        type="number"
                         value={formData.otp}
                         onChange={handleChange}
                         className="px-8 py-2 border border-gray-300 focus:outline-none w-full rounded-3xl p-4"
