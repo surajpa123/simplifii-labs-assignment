@@ -4,7 +4,7 @@ This is a React-based project created using Vite, designed to showcase a user-fr
 
 You can view the live project here: [Simplifii Labs Assignment](https://simplifii-labs-assignment.vercel.app)
 
-**Note:** Use OTP `123456` for verifying the OTP since it's a mock implementation.
+**Note:** Use last 6 digit of your mobile number for verifying the OTP since it's a mock implementation.
 
 ## Project Overview
 
