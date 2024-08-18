@@ -14,7 +14,7 @@ You can view the live project here: [Simplifii Labs Assignment](https://simplifi
 
 ## Features
 
-- **User Authentication:** The application includes an OTP verification process. For demo purposes, use OTP `123456` to verify your login.
+- **User Authentication:** The application includes an OTP verification process. For demo purposes, use last 6 digit of your mobile number  to verify your login.
 - **Responsive Design:** Tailwind CSS ensures the application is fully responsive across different devices.
 - **User Information Storage:** User data is stored in the browser's local storage with the key `userInfo`.
 - **Clean and Modern UI:** The interface is designed to be intuitive and user-friendly.
@@ -22,7 +22,7 @@ You can view the live project here: [Simplifii Labs Assignment](https://simplifi
 ## Usage Instructions
 
 - Upon opening the project, you will be directed to the registration page by default.
-- After registration, you can verify your OTP using `123456`.
+- After registration, you can verify OTP use last 6 digit of your mobile number.
 - User information will be saved in local storage under the key `userInfo`.
 
 ## Tech Stack
