@@ -40,7 +40,6 @@ export const InputField = ({
 
   useEffect(() => {
     setToggleOption(!toggleOption);
-    console.log(isFocused);
   }, [props.onChange]);
 
   return (

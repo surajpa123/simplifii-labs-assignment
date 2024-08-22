@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { logo, sidePanel } from "../assets";
 import { InputField } from "./InputField/InputField";
 import countriesData from "../assets/countries.json";
@@ -6,6 +7,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+
 export const Register = () => {
   const [countries, setCountries] = useState([]);
   const [formData, setFormData] = useState({
@@ -14,6 +16,7 @@ export const Register = () => {
     isd: "+91",
     mobileNumber: "",
     email: "",
+    otp: "",
   });
 
   const [errors, setErrors] = useState({});
@@ -22,9 +25,10 @@ export const Register = () => {
   const [otpAttempts, setOtpAttempts] = useState(0);
   const [otpLimit, setOtpLimit] = useState(0);
   const navigate = useNavigate();
+  const [pageError, setPageError] = useState({});
 
-  const maxOtpAttempts = 3;
-  const maxOtpResends = 3;
+  const maxOtpAttempts = 5;
+  const maxOtpResends = 5;
 
   useEffect(() => {
     let interval;
@@ -86,7 +90,7 @@ export const Register = () => {
     return validationErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const validationErrors = validateForm();
@@ -94,70 +98,72 @@ export const Register = () => {
       setErrors(validationErrors);
       return;
     }
-    const existingUser = JSON.parse(localStorage?.getItem("userInfo"));
-    if (existingUser) {
-      if (
-        existingUser.email === formData.email ||
-        existingUser.mobileNumber === formData.mobileNumber
-      ) {
-        toast.warning(
-          "User is already registered with this email or mobile number.",
-          {
-            position: "bottom-left",
-            theme: "colored",
-            style: {
-              backgroundColor: "rgb(236,147,36)",
-            },
-          }
-        );
-        return;
-      }
-    }
 
     if (otpLimit >= maxOtpResends) {
       toast.error("OTP resend limit exceeded.", { position: "bottom-left" });
       return;
     }
-    toast.success("OTP sent to your email!", { position: "bottom-left" });
 
-    setOtpSent(true);
-    setTimer(60);
+    try {
+      const response = await axios.post(
+        "https://colo-dev.infollion.com/api/v1/self-registration/register",
+        {
+          email: formData.email,
+          mobile: `${formData.isd} ${formData.mobileNumber}`,
+          name: formData.name,
+          salutation: formData.title,
+        }
+      );
+      toast.success(response?.data?.message, { position: "bottom-left" });
 
-    setOtpLimit((prev) => prev + 1);
+      setOtpSent(true);
+      setTimer(60);
+      setOtpLimit((prev) => prev + 1);
+    } catch (error) {
+      // setPageError()
+      if (
+        error.response.data?.message ==
+        "A user already exists with this mobile number."
+      ) {
+        setPageError({
+          message: `An account already exists with this email ID : `,
+        });
+      }
+      console.log(error.response.data);
+      toast.error(error?.response?.data?.message, { position: "bottom-left" });
+    }
   };
 
-  const handleOtpVerification = () => {
-    let correctOtp = formData.mobileNumber;
-
-    correctOtp = correctOtp.slice(-6);
-
+  const handleOtpVerification = async () => {
     let validationErrors = {};
 
     if (!formData.otp || formData.otp.length < 6) {
-      validationErrors.otp = "Please enter 6 digit otp";
+      validationErrors.otp = "Please enter 6 digit OTP";
       setErrors(validationErrors);
       return;
     }
 
-    if (formData.otp === correctOtp) {
-      const userData = {
-        title: formData.title,
-        name: formData.name,
-        isd: formData.isd,
-        mobileNumber: formData.mobileNumber,
-        email: formData.email,
-      };
+    try {
+      const response = await axios.post(
+        "https://colo-dev.infollion.com/api/v1/self-registration/verify-otp",
+        {
+          action: "SelfRegister",
+          email: formData.email,
+          otp: formData.otp,
+        }
+      );
 
-      localStorage.setItem("userInfo", JSON.stringify(userData));
+      // Handle successful OTP verification
+      if (response.data.message === "OTP verification successfull!") {
+        toast.success(`${response.data.message} Redirecting...`, {
+          position: "bottom-left",
+        });
 
-      toast.success("OTP verified! Redirecting...", {
-        position: "bottom-left",
-      });
-
-      setTimeout(() => {
-        navigate("/login");
-      }, 1500);
-    } else {
+        setTimeout(() => {
+          navigate("/login");
+        }, 1500);
+      }
+    } catch (error) {
       setOtpAttempts((prev) => prev + 1);
 
       if (otpAttempts + 1 >= maxOtpAttempts) {
@@ -168,14 +174,12 @@ export const Register = () => {
         setOtpAttempts(0);
         setFormData({ ...formData, otp: "" });
       } else {
-        toast.error("Incorrect OTP. Please try again.", {
+        toast.error(error?.response?.data?.error, {
           position: "bottom-left",
         });
       }
     }
   };
-
-  console.log(formData, "formData");
 
   return (
     <div className="flex flex-col md:flex-row h-screen">
@@ -273,7 +277,7 @@ export const Register = () => {
               {otpSent && (
                 <>
                   <InputField
-                    type="number"
+                    type="text"
                     label="Enter OTP*"
                     name="otp"
                     value={formData.otp}
@@ -320,12 +324,30 @@ export const Register = () => {
               )}
 
               <div className="text-center mt-4">
-                <p className="text-gray-600">
-                  Already have an account?{" "}
-                  <Link to={"/login"}>
-                    <p className="text-blue-500 hover:underline">Sign In</p>
-                  </Link>
-                </p>
+                {pageError?.message ? (
+                  <div className="border border-[#e2be92] rounded-lg p-4 shadow-md">
+                    <p className="font-medium">
+                      {pageError?.message}{" "}
+                      <span className="font-normal"> {formData?.email} </span>
+                    </p>
+
+                    <p className="mt-3">
+                      <Link to={"/login"} className="text-blue-600 font-medium">
+                        Click here to Sign-In{" "}
+                      </Link>{" "}
+                      <span className="font-medium">
+                        if this account belongs to you.
+                      </span>
+                    </p>
+                  </div>
+                ) : (
+                  <p className="text-gray-600">
+                    Already have an account?{" "}
+                    <Link to={"/login"}>
+                      <p className="text-blue-500 hover:underline">Sign In</p>
+                    </Link>
+                  </p>
+                )}
               </div>
             </form>
           </div>
